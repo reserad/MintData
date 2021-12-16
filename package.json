@@ -1,0 +1,43 @@
+{
+    "name": "mint-data-ui",
+    "version": "1.0.0",
+    "main": "",
+    "license": "MIT",
+    "engines": {
+        "node": "12.x"
+    },
+    "scripts": {
+        "start": "webpack-dev-server"
+    },
+    "dependencies": {
+        "@reduxjs/toolkit": "^1.6.2",
+        "axios": "^0.24.0",
+        "copy-webpack-plugin": "^10.0.0",
+        "html-webpack-plugin": "^5.5.0",
+        "moment": "^2.29.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-redux": "^7.2.6",
+        "react-router-dom": "^6.0.2",
+        "recharts": "^2.1.6",
+        "redux": "^4.1.2",
+        "semantic-ui-css": "^2.4.1",
+        "semantic-ui-react": "^2.0.4"
+    },
+    "devDependencies": {
+        "@types/react": "^17.0.37",
+        "@types/react-dom": "^17.0.11",
+        "css-loader": "^3.6.0",
+        "dotenv-webpack": "^7.0.3",
+        "file-loader": "^6.2.0",
+        "node-sass": "^7.0.0",
+        "sass-loader": "^12.3.0",
+        "style-loader": "^3.3.1",
+        "ts-loader": "^9.2.6",
+        "typescript": "^4.5.2",
+        "url-loader": "^4.1.1",
+        "webpack": "^5.64.4",
+        "webpack-cli": "^4.9.1",
+        "webpack-dev-server": "^4.6.0"
+    }
+}

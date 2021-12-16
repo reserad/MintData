@@ -1,0 +1,213 @@
+@import 'variables';
+
+body {
+    width: 100%;
+    height: initial !important;
+}
+
+.app-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.app-root {
+    background-color: rgba(223, 223, 223, 1);
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.page-wrapper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.panel {
+    max-width: 1200px;
+    margin: 20px;
+    padding: 25px;
+    border-color: #cdcdcd; 
+    border-radius: 20px;
+    border-width: 1px;
+    border-style: solid;
+
+    & > .panel-header {
+        font-size: 30px;
+        margin-top: 25px;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    & > .panel-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+}
+
+table {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+thead {
+    display: flex;
+    flex-direction: row;
+    height: 25px;
+}
+
+tbody {
+    flex-direction: column;
+    display: flex;
+    min-height: 500px;
+
+    > tr {
+        display: flex;
+        height: 25px;
+    }
+}
+
+td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tr-fill {
+    flex: 1;
+}
+
+.td-fill {
+    flex: 1;
+}
+
+.category {
+    width: 200px;
+}
+
+tfoot {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    > tr {
+        flex: 1;
+        display: flex;
+
+        > td {
+            overflow: initial;
+        }
+    }
+}
+
+.page-button {
+    min-width: 55px;
+    width: 55px;
+    height: 36px;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    margin-right: 4px;
+    margin-left: 4px;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+
+    &:first-child {
+        margin-left: 0px;
+    }
+    
+    &:last-child {
+        margin-right: 0px;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.active {
+        background-color: grey;
+    }
+
+    > i {
+        margin: 0px !important;
+        padding: 0px;
+    }
+
+    &.end {
+        width: 40px;
+        min-width: 40px;
+    }
+}
+
+.page-size-dropdown {
+    width: 145px !important;
+    height: 36px;
+}
+
+.recharts-sector:hover {
+    cursor: pointer;
+}
+
+@media all and (min-width: 802px) {
+    .category {
+        display: initial;
+    }
+}
+
+@media all and (max-width: 801px) {
+    .category {
+        display: none;
+    }
+}
+
+@media all and (min-width: 641px) {
+    .monthly-spending-web {
+        display: initial;
+    }
+    .monthly-spending-mobile {
+        display: none;
+    }
+}
+
+@media all and (max-width: 640px) {
+    .monthly-spending-web {
+        display: none;
+    }
+    .monthly-spending-mobile {
+        display: initial;
+    }
+}
+
+@media all and (min-width: 951px) {
+    .table-footer-web {
+        display: flex;
+    }
+
+    .table-footer-mobile {
+        display: none;
+    }
+}
+
+
+@media all and (max-width: 950px) {
+    .table-footer-mobile {
+        display: flex;
+    }
+
+    .table-footer-web {
+        display: none;
+    }
+}
