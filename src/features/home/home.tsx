@@ -81,7 +81,7 @@ const Home: React.FC = () => {
                 <Panel header="Transactions">
                     <table style={{width: '100%'}}>
                         <thead>
-                            <tr style={{width: 120}}>
+                            <tr style={{width: 9}}>
                                 <th>Date</th>
                             </tr>
                             <tr className="tr-fill">
@@ -98,7 +98,7 @@ const Home: React.FC = () => {
                             {grid.data.map((transaction, i) => {
                                 return (
                                     <tr key={transaction.id}>
-                                        <td style={{width: 120}}>{moment(transaction.date).format("MM/DD/YYYY")}</td>
+                                        <td style={{width: 95}}>{moment(transaction.date).format("MM/DD/YYYY")}</td>
                                         <td className="td-fill">{transaction.description}</td>
                                         <td className="category">{transaction.category}</td>
                                         <td style={{width: 80}}>{CurrencyFormatter.format(parseFloat(transaction.amount))}</td>

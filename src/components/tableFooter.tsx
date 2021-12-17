@@ -60,7 +60,7 @@ const TableFooter = (props: TableFooterProps) => {
             <tfoot className="table-footer-web">
                 <tr>
                     <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: 1, take: perPage})}>
+                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: 1, take: perPage})} disabled={currentPage === 1}>
                             <Icon name="arrow left" />
                         </Button>
                     </td>
@@ -72,7 +72,7 @@ const TableFooter = (props: TableFooterProps) => {
                         )
                     })}
                     <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: lastPage, take: perPage})}>
+                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: lastPage, take: perPage})} disabled={currentPage === lastPage}>
                             <Icon name="arrow right" />
                         </Button>
                     </td>
@@ -96,33 +96,15 @@ const TableFooter = (props: TableFooterProps) => {
         return (
             <tfoot className="table-footer-mobile">
                 <tr>
-                    <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: 1, take: perPage})}>
+                    <td style={{flex: 1}}>
+                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: currentPage === 1 ? 1 : currentPage-1, take: perPage})} disabled={currentPage === 1}>
                             <Icon name="arrow left" />
                         </Button>
                     </td>
-                    {pageButtonIndexes.map(i => {
-                        return (
-                            <td key={i}>
-                                <Button className="page-button" basic={currentPage !== i} onClick={() => handleGridPagination({page: i, take: perPage})}>{i}</Button>
-                            </td>
-                        )
-                    })}
                     <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: lastPage, take: perPage})}>
+                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage})} disabled={currentPage === lastPage}>
                             <Icon name="arrow right" />
                         </Button>
-                    </td>
-                </tr>
-                <tr style={{justifyContent: 'flex-end'}}>
-                    <td>
-                        <Dropdown
-                            className="page-size-dropdown"
-                            onChange={(event, data) => handlePageSelection(data.value as number)}
-                            fluid
-                            selection
-                            options={dropdownOptions} 
-                            defaultValue={20}/>
                     </td>
                 </tr>
             </tfoot>
