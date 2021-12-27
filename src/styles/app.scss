@@ -60,6 +60,14 @@ thead {
     height: 25px;
 }
 
+.sortable {
+    cursor: pointer;
+}
+
+.sorted {
+    color: rgb(0, 77, 107);
+}
+
 tbody {
     flex-direction: column;
     display: flex;

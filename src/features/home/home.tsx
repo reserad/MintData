@@ -2,20 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { homeSelector, HomePayload, getAllTransactions} from './homeSlice';
 import { Dropdown, DropdownItemProps } from 'semantic-ui-react';
-import {TableFooter} from '../../components/tableFooter';
 import transactionsService from '../../services/transactionsService';
 import { TransactionsGrid } from '../../models/transactionsGrid';
-import { GridPagination } from '../../models/gridPagination';
 import { MonthlySpendingPieChart } from '../../components/monthlySpendingPieChart';
 import moment from 'moment';
 import { Transaction } from '../../models/transaction';
 import { Panel } from '../../components/panel';
+import Grid from '../../components/grid/grid';
+import {Column} from '../../components/grid/gridHeaderColumn';
 import CurrencyFormatter from '../../helpers/currencyFormatter';
+import { GridFilters } from '../../models/gridFilters';
 
 const Home: React.FC = () => {
     const dispatch = useDispatch();
     const { isGettingTransactions, transactionsError } = useSelector(homeSelector) as HomePayload;
-    const [gridPagnination, setGridPagination] = useState({page: 1, take: 20} as GridPagination);
+    const [gridFilters, setGridFilters] = useState({page: 1, take: 20, sortBy: null, direction: 'desc'} as GridFilters);
     const [grid, setGrid] = useState<TransactionsGrid>({data: [], pagination: null});
     const [monthlySpending, setMonthlySpending] = useState<Transaction[]>([]);
     const [isLoadingGrid, setIsLoadingGrid] = useState(true);
@@ -23,8 +24,8 @@ const Home: React.FC = () => {
     const [month, setMonth] = useState(moment().format("MM/DD/YYYY"));
 
     useEffect(() => {
-        loadGrid(gridPagnination);
-    }, [gridPagnination]);
+        loadGrid(gridFilters);
+    }, [gridFilters]);
 
     useEffect(() => {
         dispatch(getAllTransactions());
@@ -34,9 +35,9 @@ const Home: React.FC = () => {
         loadMonthlySpendingPieChart();
     }, [month])
 
-    const loadGrid = async (gridPagnination: GridPagination) => {
-        const {page, take} = gridPagnination;
-        const result = await transactionsService.paginate(page, take);
+    const loadGrid = async (gridFilters: GridFilters) => {
+        const {page, take, sortBy, direction} = gridFilters;
+        const result = await transactionsService.grid(page, take, sortBy, direction);
         setGrid(result);
         setIsLoadingGrid(false);
     }
@@ -79,37 +80,39 @@ const Home: React.FC = () => {
         <div className="page-wrapper">
             {!isLoadingGrid && !gridError && grid && (
                 <Panel header="Transactions">
-                    <table style={{width: '100%'}}>
-                        <thead>
-                            <tr style={{width: 9}}>
-                                <th>Date</th>
-                            </tr>
-                            <tr className="tr-fill">
-                                <th>Description</th>
-                            </tr>
-                            <tr className="category">
-                                <th>Category</th>
-                            </tr>
-                            <tr style={{width: 80}}>
-                                <th>Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {grid.data.map((transaction, i) => {
-                                return (
-                                    <tr key={transaction.id}>
-                                        <td style={{width: 95}}>{moment(transaction.date).format("MM/DD/YYYY")}</td>
-                                        <td className="td-fill">{transaction.description}</td>
-                                        <td className="category">{transaction.category}</td>
-                                        <td style={{width: 80}}>{CurrencyFormatter.format(parseFloat(transaction.amount))}</td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                        <TableFooter 
-                            pagination={grid.pagination}
-                            handleGridPagination={setGridPagination}/>
-                    </table>
+                    <Grid
+                        gridData={grid}
+                        enableSort={true}
+                        enableFooter={true}
+                        gridFilters={gridFilters}
+                        onGridChange={setGridFilters}>
+                        <Column
+                            name="date"
+                            width={95} 
+                            title="Date" 
+                            render={(value: string) => {
+                                return <div>{moment(value).format("MM/DD/YYYY")}</div>
+                            }}
+                        />
+                        <Column
+                            name="description"
+                            className="tr-fill" 
+                            title="Description" 
+                        />
+                        <Column
+                            name="category"
+                            className="category" 
+                            title="Category" 
+                        />
+                        <Column
+                            name="amount"
+                            width={80}
+                            title="Amount"
+                            render={(value: string) => {
+                                return <div>{CurrencyFormatter.format(parseFloat(value))}</div>
+                            }}
+                        />
+                    </Grid>
                 </Panel>
             )}
             <div className="monthly-spending-web">

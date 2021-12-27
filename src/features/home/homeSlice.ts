@@ -7,17 +7,13 @@ import { AppThunk } from "../../store/store";
 export interface HomePayload {
     isGettingTransactions: boolean,
     transactions: Transaction[],
-    transactionsError: any,
-    page: number,
-    take: number
+    transactionsError: any
 }
 
 const initialState: HomePayload = {
     isGettingTransactions: true,
     transactions: [],
-    transactionsError: null,
-    page: 0,
-    take: 20
+    transactionsError: null
 };
 
 const homeSlice = createSlice({
@@ -48,32 +44,6 @@ export const getAllTransactions = (): AppThunk => async (dispatch: Dispatch) => 
         dispatch(setGettingTransactions(false))
     }
 }
-
-// export const getTransactionById = (id: string): AppThunk => async (dispatch) => {
-//     try {
-//         dispatch(setLoading(true))
-//         let transaction = await transactionsService.getById(id);
-//         dispatch(setTransactions(transaction.data));
-//     } catch (error) {
-//         dispatch(setTransactionsFailed(error))
-//     } finally {
-//         dispatch(setLoading(false))
-//     }
-// }
-
-// export const paginate = (page: number, take: number): AppThunk => async (dispatch) => {
-//     try {
-//         dispatch(setLoading(true))
-//         let response = await transactionsService.paginate(page, take);
-//         let {data, pagination} = response.data;
-//         dispatch(setTransactions(data));
-//     } catch (error) {
-//         dispatch(setTransactionsFailed(error))
-//     } finally {
-//         dispatch(setLoading(false))
-//     }
-// }
-
 
 export const { setTransactions, setTransactionsFailed, setGettingTransactions } = homeSlice.actions;
 

@@ -1,4 +1,3 @@
-import { ApiResponse } from '../models/apiRequest';
 import { TransactionsGrid } from '../models/transactionsGrid';
 import axios from './baseService';
 
@@ -11,8 +10,8 @@ class TransactionsService {
         return axios.get(`/transactions/${id}`);
     }
 
-    paginate = async (page: number, take: number): Promise<TransactionsGrid> => {
-        const {data} = await axios.post(`/transactions/paginate`, {page, take});
+    grid = async (page: number, take: number, sortBy: string, direction: string): Promise<TransactionsGrid> => {
+        const {data} = await axios.post(`/transactions/grid`, {page, take, sortBy, direction});
         return data;
     }
     

@@ -1,21 +1,19 @@
 import React from 'react';
 import { Dropdown, DropdownItemProps, Icon } from 'semantic-ui-react';
-import { GridPagination } from '../models/gridPagination';
-import { Pagination } from '../models/pagination';
 import { Button } from 'semantic-ui-react';
+import { GridFilters } from '../../models/gridFilters';
+import { Pagination } from '../../models/pagination';
 
-type TableFooterProps = {
-    pagination: Pagination,
-    handleGridPagination: (gridPagination: GridPagination) => void
+type GridFooterProps = {
+    pagination: Pagination;
+    gridFilters: GridFilters;
+    onGridChange: (gridFilters: GridFilters) => void;
 }
 
-const TableFooter = (props: TableFooterProps) => {
-    const {pagination, handleGridPagination} = props;
-    const {currentPage, lastPage, perPage } = pagination;
-    let pageButtonIndexes = [1,2,3,4,5,6,7,8,9,10];
+function getPageButtonIndexes(defaultPageNumbers: number[], currentPage: number, lastPage: number) {
     let firstHalfConcat: number[] = [];
     let lastHalfConcat: number[] = [];
-    
+
     if (currentPage >= 7) {
         if (currentPage - 5 >= 2) {
             firstHalfConcat = [currentPage-5, currentPage-4, currentPage-3, currentPage-2, currentPage-1]
@@ -32,8 +30,16 @@ const TableFooter = (props: TableFooterProps) => {
                 lastHalfConcat.push(currentPage+(i+1));
             })
         }
-        pageButtonIndexes = firstHalfConcat.concat([currentPage]).concat(lastHalfConcat);
+        return firstHalfConcat.concat([currentPage]).concat(lastHalfConcat);
     }
+
+    return defaultPageNumbers;
+}
+
+const GridFooter = (props: GridFooterProps) => {
+    const {pagination, onGridChange, gridFilters} = props;
+    const {currentPage, lastPage, perPage } = pagination;
+    const pageButtonIndexes = getPageButtonIndexes([1,2,3,4,5,6,7,8,9,10], currentPage, lastPage);
 
     const dropdownOptions: DropdownItemProps[] = [20, 50, 100].map(item => {
         return {
@@ -52,7 +58,7 @@ const TableFooter = (props: TableFooterProps) => {
                 newPage++;
             }
         }
-        props.handleGridPagination({page: newPage, take});
+        onGridChange({...gridFilters, page: newPage, take});
     }
 
     const renderWebFooter = () => {
@@ -60,19 +66,19 @@ const TableFooter = (props: TableFooterProps) => {
             <tfoot className="table-footer-web">
                 <tr>
                     <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: 1, take: perPage})} disabled={currentPage === 1}>
+                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: 1, take: perPage})} disabled={currentPage === 1}>
                             <Icon name="arrow left" />
                         </Button>
                     </td>
                     {pageButtonIndexes.map(i => {
                         return (
                             <td key={i}>
-                                <Button className="page-button" basic={currentPage !== i} onClick={() => handleGridPagination({page: i, take: perPage})}>{i}</Button>
+                                <Button className="page-button" basic={currentPage !== i} onClick={() =>  onGridChange({...gridFilters, page: i, take: perPage})}>{i}</Button>
                             </td>
                         )
                     })}
                     <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: lastPage, take: perPage})} disabled={currentPage === lastPage}>
+                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: lastPage, take: perPage})} disabled={currentPage === lastPage}>
                             <Icon name="arrow right" />
                         </Button>
                     </td>
@@ -97,12 +103,12 @@ const TableFooter = (props: TableFooterProps) => {
             <tfoot className="table-footer-mobile">
                 <tr>
                     <td style={{flex: 1}}>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: currentPage === 1 ? 1 : currentPage-1, take: perPage})} disabled={currentPage === 1}>
+                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: currentPage === 1 ? 1 : currentPage-1, take: perPage})} disabled={currentPage === 1}>
                             <Icon name="arrow left" />
                         </Button>
                     </td>
                     <td>
-                        <Button className="page-button end" basic onClick={() => handleGridPagination({page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage})} disabled={currentPage === lastPage}>
+                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage})} disabled={currentPage === lastPage}>
                             <Icon name="arrow right" />
                         </Button>
                     </td>
@@ -121,6 +127,6 @@ const TableFooter = (props: TableFooterProps) => {
 }
 
 export {
-    TableFooter,
-    TableFooterProps
+    GridFooter,
+    GridFooterProps
 };
