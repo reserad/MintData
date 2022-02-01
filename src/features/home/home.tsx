@@ -12,11 +12,12 @@ import Grid from '../../components/grid/grid';
 import {Column} from '../../components/grid/gridHeaderColumn';
 import CurrencyFormatter from '../../helpers/currencyFormatter';
 import { GridFilters } from '../../models/gridFilters';
+import { GridColumnFilterType } from '../../models/gridColumn';
 
 const Home: React.FC = () => {
     const dispatch = useDispatch();
     const { isGettingTransactions, transactionsError } = useSelector(homeSelector) as HomePayload;
-    const [gridFilters, setGridFilters] = useState({page: 1, take: 20, sortBy: null, direction: 'desc'} as GridFilters);
+    const [gridFilters, setGridFilters] = useState<GridFilters>({page: 1, take: 20, sortBy: null, direction: 'desc', filters: []});
     const [grid, setGrid] = useState<TransactionsGrid>({data: [], pagination: null});
     const [monthlySpending, setMonthlySpending] = useState<Transaction[]>([]);
     const [isLoadingGrid, setIsLoadingGrid] = useState(true);
@@ -36,8 +37,8 @@ const Home: React.FC = () => {
     }, [month])
 
     const loadGrid = async (gridFilters: GridFilters) => {
-        const {page, take, sortBy, direction} = gridFilters;
-        const result = await transactionsService.grid(page, take, sortBy, direction);
+        const {page, take, sortBy, direction, filters} = gridFilters;
+        const result = await transactionsService.grid(page, take, sortBy, direction, filters);
         setGrid(result);
         setIsLoadingGrid(false);
     }
@@ -85,7 +86,7 @@ const Home: React.FC = () => {
                         <Column
                             name="date"
                             width={95} 
-                            title="Date" 
+                            title="Date"
                             render={(value: string) => {
                                 return <div>{moment(value).format("MM/DD/YYYY")}</div>
                             }}
@@ -93,17 +94,20 @@ const Home: React.FC = () => {
                         <Column
                             name="description"
                             className="tr-fill" 
-                            title="Description" 
+                            title="Description"
+                            filterType={GridColumnFilterType.Contains}
                         />
                         <Column
                             name="category"
                             className="category" 
-                            title="Category" 
+                            title="Category"
+                            filterType={GridColumnFilterType.Contains}
                         />
                         <Column
                             name="amount"
                             width={80}
                             title="Amount"
+                            filterType={GridColumnFilterType.Equals}
                             render={(value: string) => {
                                 return <div>{CurrencyFormatter.format(parseFloat(value))}</div>
                             }}
