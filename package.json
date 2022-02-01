@@ -10,6 +10,9 @@
         "start": "webpack-dev-server"
     },
     "dependencies": {
+        "@emotion/react": "^11.7.1",
+        "@emotion/styled": "^11.6.0",
+        "@mui/material": "^5.3.1",
         "@reduxjs/toolkit": "^1.6.2",
         "axios": "^0.24.0",
         "copy-webpack-plugin": "^10.0.0",
@@ -20,9 +23,7 @@
         "react-redux": "^7.2.6",
         "react-router-dom": "^6.0.2",
         "recharts": "^2.1.6",
-        "redux": "^4.1.2",
-        "semantic-ui-css": "^2.4.1",
-        "semantic-ui-react": "^2.0.4"
+        "redux": "^4.1.2"
     },
     "devDependencies": {
         "@types/react": "^17.0.37",

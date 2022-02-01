@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { homeSelector, HomePayload, getAllTransactions} from './homeSlice';
-import { Dropdown, DropdownItemProps } from 'semantic-ui-react';
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import transactionsService from '../../services/transactionsService';
 import { TransactionsGrid } from '../../models/transactionsGrid';
 import { MonthlySpendingPieChart } from '../../components/monthlySpendingPieChart';
@@ -56,15 +56,11 @@ const Home: React.FC = () => {
                 date.subtract(1, 'M');
             }
 
-            return {
-                key: date.format("MM/DD/YYYY"),
-                text: date.format("MMMM YYYY"),
-                value: date.format("MM/DD/YYYY")
-            } as DropdownItemProps;
+            return (<MenuItem key={`${date.format("MM/DD/YYYY")}-${i}`} value={date.format("MM/DD/YYYY")}>{date.format("MMMM YYYY")}</MenuItem>)
         });
     }
 
-    const renderMonthlySpendingHeader = () => {
+    const MonthlySpendingHeader = () => {
         return (
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                 <div style={{marginLeft: 20}}>{moment(month).format("MMMM YYYY")} Spending</div>
@@ -116,26 +112,36 @@ const Home: React.FC = () => {
                 </Panel>
             )}
             <div className="monthly-spending-web">
-                <Panel header={renderMonthlySpendingHeader()}>
-                    <Dropdown
-                        style={{width: 325}}
-                        onChange={(event, data) => setMonth(data.value as string)}
-                        fluid
-                        selection
-                        options={provideMonthlySpendingHeaderDropdownOptions()} 
-                        value={month} />
+                <Panel header={<MonthlySpendingHeader />}>
+                    <FormControl size='small' variant='outlined' style={{width: 250, marginTop: 15}}>
+                        <InputLabel id="month-label">Month</InputLabel>
+                        <Select
+                            labelId="month-label"
+                            id="month-select"
+                            value={month}
+                            label="Month"
+                            onChange={(event, data) => setMonth(event.target.value as string)}
+                        >
+                            {provideMonthlySpendingHeaderDropdownOptions()}
+                        </Select>
+                    </FormControl>
                     <MonthlySpendingPieChart data={monthlySpending} />
                 </Panel>
             </div>
             <div className="monthly-spending-mobile">
-                <Panel header={renderMonthlySpendingHeader()}>
-                    <Dropdown
-                        style={{maxWidth: 325}}
-                        onChange={(event, data) => setMonth(data.value as string)}
-                        fluid
-                        selection
-                        options={provideMonthlySpendingHeaderDropdownOptions()} 
-                        value={month} />
+                <Panel header={<MonthlySpendingHeader />}>
+                <FormControl size='small' variant='outlined' style={{width: 250, marginTop: 15}}>
+                        <InputLabel id="month-label">Month</InputLabel>
+                        <Select
+                            labelId="month-label"
+                            id="month-select"
+                            value={month}
+                            label="Month"
+                            onChange={(event, data) => setMonth(event.target.value as string)}
+                        >
+                            {provideMonthlySpendingHeaderDropdownOptions()}
+                        </Select>
+                    </FormControl>
                     <MonthlySpendingPieChart data={monthlySpending} size='small' />
                 </Panel>
             </div>

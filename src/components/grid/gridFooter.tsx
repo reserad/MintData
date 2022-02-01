@@ -1,6 +1,6 @@
+import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import Stack from '@mui/material/Stack';
 import React from 'react';
-import { Dropdown, DropdownItemProps, Icon } from 'semantic-ui-react';
-import { Button } from 'semantic-ui-react';
 import { GridFilters } from '../../models/gridFilters';
 import { Pagination } from '../../models/pagination';
 
@@ -41,14 +41,6 @@ const GridFooter = (props: GridFooterProps) => {
     const {currentPage, lastPage, perPage } = pagination;
     const pageButtonIndexes = getPageButtonIndexes([1,2,3,4,5,6,7,8,9,10], currentPage, lastPage);
 
-    const dropdownOptions: DropdownItemProps[] = [20, 50, 100].map(item => {
-        return {
-            key: item,
-            text: `${item} per page`,
-            value: item
-        }
-    });
-
     const handlePageSelection = (take: number) => {
         let newPage = 1;
         if (currentPage !== 1) {
@@ -61,56 +53,49 @@ const GridFooter = (props: GridFooterProps) => {
         onGridChange({...gridFilters, page: newPage, take});
     }
 
-    const renderWebFooter = () => {
+    const Footer = () => {
         return (
-            <tfoot className="table-footer-web">
+            <tfoot>
                 <tr>
                     <td>
-                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: 1, take: perPage})} disabled={currentPage === 1}>
-                            <Icon name="arrow left" />
-                        </Button>
-                    </td>
-                    {pageButtonIndexes.map(i => {
-                        return (
-                            <td key={i}>
-                                <Button className="page-button" basic={currentPage !== i} onClick={() =>  onGridChange({...gridFilters, page: i, take: perPage})}>{i}</Button>
-                            </td>
-                        )
-                    })}
-                    <td>
-                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: lastPage, take: perPage})} disabled={currentPage === lastPage}>
-                            <Icon name="arrow right" />
-                        </Button>
-                    </td>
-                </tr>
-                <tr style={{justifyContent: 'flex-end'}}>
-                    <td>
-                        <Dropdown
-                            className="page-size-dropdown"
-                            onChange={(event, data) => handlePageSelection(data.value as number)}
-                            fluid
-                            selection
-                            options={dropdownOptions} 
-                            defaultValue={20}/>
-                    </td>
-                </tr>
-            </tfoot>
-        )
-    }
+                        <Stack spacing={1} direction='row'>
+                            <Button className="page-button previous" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: currentPage === 1 ? 1 : currentPage-1, take: perPage})} disabled={currentPage === 1}>
+                                &lt;
+                            </Button>
+                            <Button className="page-button begin" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: 1, take: perPage})} disabled={currentPage === 1}>
+                                ≪
+                            </Button>
+                            {pageButtonIndexes.map((pageNumber, i) => {
+                                return (
+                                    <Button key={`footer-button-${pageNumber}`} className="page-button number" variant={currentPage !== pageNumber ? 'outlined' : 'contained'} onClick={() =>  onGridChange({...gridFilters, page: pageNumber, take: perPage})}>{pageNumber}</Button>
+                                )
+                            })}
+                            <Button className="page-button end" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: lastPage, take: perPage})} disabled={currentPage === lastPage}>
+                                ≫
+                            </Button>
+                            <Button className="page-button next" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage})} disabled={currentPage === lastPage}>
+                                &gt;
+                            </Button>
+                        </Stack>
 
-    const renderMobileFooter = () => {
-        return (
-            <tfoot className="table-footer-mobile">
-                <tr>
-                    <td style={{flex: 1}}>
-                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: currentPage === 1 ? 1 : currentPage-1, take: perPage})} disabled={currentPage === 1}>
-                            <Icon name="arrow left" />
-                        </Button>
                     </td>
-                    <td>
-                        <Button className="page-button end" basic onClick={() =>  onGridChange({...gridFilters, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage})} disabled={currentPage === lastPage}>
-                            <Icon name="arrow right" />
-                        </Button>
+                </tr>
+                <tr className='footer-dropdown' style={{justifyContent: 'flex-end'}}>
+                    <td style={{width: 80}}>
+                        <FormControl fullWidth size='small' variant='outlined'>
+                            <InputLabel id="demo-simple-select-label">Page Size</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={pagination.perPage}
+                                label="Age"
+                                onChange={(event, data) => handlePageSelection(event.target.value as number)}
+                            >
+                                <MenuItem value={20}>20</MenuItem>
+                                <MenuItem value={50}>50</MenuItem>
+                                <MenuItem value={100}>100</MenuItem>
+                            </Select>
+                        </FormControl>
                     </td>
                 </tr>
             </tfoot>
@@ -118,10 +103,7 @@ const GridFooter = (props: GridFooterProps) => {
     }
 
     return (
-        <>
-            {renderWebFooter()}
-            {renderMobileFooter()}
-        </>
+        <Footer />
     )
 
 }

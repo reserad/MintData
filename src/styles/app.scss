@@ -1,7 +1,15 @@
 @import 'variables';
 
+html {
+    font-size: initial;
+}
+
+body {
+    font-family: 'Roboto';
+}
+
 .app-root {
-    background-color: rgba(223, 223, 223, 1);
+    background-color: #161c2e;
     display: flex;
     width: 100%;
     min-height: 100vh;
@@ -103,10 +111,7 @@ tfoot {
 }
 
 .page-button {
-    min-width: 55px;
-    width: 55px;
     height: 36px;
-    display: flex !important;
     justify-content: center;
     align-items: center;
     margin-right: 4px;
@@ -144,6 +149,21 @@ tfoot {
     }
 
     &.end {
+        width: 40px;
+        min-width: 40px;
+    }
+
+    &.begin {
+        width: 40px;
+        min-width: 40px;
+    }
+
+    &.next {
+        width: 40px;
+        min-width: 40px;
+    }
+
+    &.previous {
         width: 40px;
         min-width: 40px;
     }
@@ -188,23 +208,58 @@ tfoot {
     }
 }
 
-@media all and (min-width: 951px) {
-    .table-footer-web {
+@media all and (min-width: 1015px) {
+    .footer-dropdown {
         display: flex;
     }
+}
 
-    .table-footer-mobile {
+
+@media all and (max-width: 1014px) {
+    .footer-dropdown {
+        display: none;
+    }
+    .page-button.next {
+        display: none;
+    }
+    .page-button.previous {
+        display: none;
+    }
+}
+
+@media all and (min-width: 920px) {
+    .page-button.number {
+        display: flex;
+    }
+    .page-button.begin {
+        display: flex;
+    }
+    .page-button.end {
+        display: flex;
+    }
+    .page-button.next {
+        display: none;
+    }
+    .page-button.previous {
         display: none;
     }
 }
 
 
-@media all and (max-width: 950px) {
-    .table-footer-mobile {
+@media all and (max-width: 919px) {
+    .page-button.number {
+        display: none;
+    }
+    .page-button.end {
+        display: none;
+    }
+    .page-button.begin {
+        display: none;
+    }
+    .page-button.next {
         display: flex;
     }
-
-    .table-footer-web {
-        display: none;
+    .page-button.previous {
+        display: flex;
     }
 }
