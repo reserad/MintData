@@ -59,9 +59,9 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
             style={{width}}
         >
             <th>
-                <div style={{height: 45}}>
+                <div style={{height: 45, marginLeft: 5, marginRight: 5}}>
                     {filterType &&
-                        <TextField variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} />
+                        <TextField variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} fullWidth={true} />
                     }
                 </div>
                 <div className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>

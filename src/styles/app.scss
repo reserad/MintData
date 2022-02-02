@@ -22,7 +22,6 @@ body {
 }
 
 .panel {
-    max-width: 1200px;
     margin: 20px;
     padding: 25px;
     border-color: #cdcdcd; 
@@ -62,7 +61,7 @@ thead {
 }
 
 .sorted {
-    color: rgb(0, 77, 107);
+    color: #1565c0;
 }
 
 tbody {
@@ -109,6 +108,12 @@ tfoot {
         }
     }
 }
+
+th {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+} 
 
 .page-button {
     height: 36px;

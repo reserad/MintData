@@ -105,7 +105,7 @@ const Home: React.FC = () => {
                         />
                         <Column
                             name="amount"
-                            width={80}
+                            width={95}
                             title="Amount"
                             filterType={GridColumnFilterType.Equals}
                             render={(value: string) => {
