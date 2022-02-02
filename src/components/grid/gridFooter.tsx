@@ -10,7 +10,9 @@ type GridFooterProps = {
     onGridChange: (gridFilters: GridFilters) => void;
 }
 
-function getPageButtonIndexes(defaultPageNumbers: number[], currentPage: number, lastPage: number) {
+//Will show max 5 to left and 4 to right of current page.
+export const getPageButtonIndexes = (currentPage: number, lastPage: number) => {
+    
     let firstHalfConcat: number[] = [];
     let lastHalfConcat: number[] = [];
 
@@ -33,24 +35,72 @@ function getPageButtonIndexes(defaultPageNumbers: number[], currentPage: number,
         return firstHalfConcat.concat([currentPage]).concat(lastHalfConcat);
     }
 
-    return defaultPageNumbers;
+    return [1,2,3,4,5,6,7,8,9,10];
+}
+
+export const getNewPageNumber = (currentPage: number, from: number, take: number) => {
+    let newPage = 1;
+    if (currentPage !== 1) {
+        while (from >= take) {
+            from -= take;
+            newPage++;
+        }
+    }
+
+    return newPage;
+}
+
+export const getNewGridFilters = (footerProps: GridFooterProps, paginationAction: 'first' | 'last' | 'next' | 'previous' | 'pageNumber', pageNumber: number = 0): GridFilters => {
+    const {gridFilters, pagination} = footerProps;
+    const {perPage, lastPage, currentPage} = pagination;
+
+    switch(paginationAction) {
+        case 'first':
+            return {...gridFilters, page: 1, take: perPage};
+        case 'last':
+            return {...gridFilters, page: lastPage, take: perPage};
+        case 'previous':
+            return {...gridFilters, page: currentPage === 1 ? 1 : currentPage-1, take: perPage};
+        case 'next':
+            return {...gridFilters, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage}
+        default:
+            return {...gridFilters, page: pageNumber, take: perPage};
+    }
 }
 
 const GridFooter = (props: GridFooterProps) => {
     const {pagination, onGridChange, gridFilters} = props;
-    const {currentPage, lastPage, perPage } = pagination;
-    const pageButtonIndexes = getPageButtonIndexes([1,2,3,4,5,6,7,8,9,10], currentPage, lastPage);
+    const {currentPage, lastPage, perPage, from } = pagination;
+    const pageButtonIndexes = getPageButtonIndexes(currentPage, lastPage);
 
     const handlePageSelection = (take: number) => {
-        let newPage = 1;
-        if (currentPage !== 1) {
-            let from = props.pagination.from;
-            while (from >= take) {
-                from -= take;
-                newPage++;
-            }
-        }
+        const newPage = getNewPageNumber(currentPage, from, take);
         onGridChange({...gridFilters, page: newPage, take});
+    }
+
+    const handlePreviousButtonPress = () => {
+        const newGridFilters = getNewGridFilters(props, 'previous');
+        onGridChange(newGridFilters);
+    }
+
+    const handleFirstButtonPress = () => {
+        const newGridFilters = getNewGridFilters(props, 'first');
+        onGridChange(newGridFilters);
+    }
+
+    const handlePageButtonPress = (pageNumber: number) => {
+        const newGridFilters = getNewGridFilters(props, 'pageNumber', pageNumber);
+        onGridChange(newGridFilters);
+    }
+
+    const handleLastButtonPress = () => {
+        const newGridFilters = getNewGridFilters(props, 'last');
+        onGridChange(newGridFilters);
+    }
+
+    const handleNextButtonPress = () => {
+        const newGridFilters = getNewGridFilters(props, 'next');
+        onGridChange(newGridFilters);
     }
 
     const Footer = () => {
@@ -59,22 +109,22 @@ const GridFooter = (props: GridFooterProps) => {
                 <tr>
                     <td>
                         <Stack spacing={1} direction='row'>
-                            <Button className="page-button previous" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: currentPage === 1 ? 1 : currentPage-1, take: perPage})} disabled={currentPage === 1}>
-                                &lt;
-                            </Button>
-                            <Button className="page-button begin" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: 1, take: perPage})} disabled={currentPage === 1}>
+                            <Button className="page-button first" variant='outlined' onClick={handleFirstButtonPress} disabled={currentPage === 1}>
                                 ≪
                             </Button>
-                            {pageButtonIndexes.map((pageNumber, i) => {
+                            <Button className="page-button previous" variant='outlined' onClick={handlePreviousButtonPress} disabled={currentPage === 1}>
+                                &lt;
+                            </Button>
+                            {pageButtonIndexes.map(pageNumber => {
                                 return (
-                                    <Button key={`footer-button-${pageNumber}`} className="page-button number" variant={currentPage !== pageNumber ? 'outlined' : 'contained'} onClick={() =>  onGridChange({...gridFilters, page: pageNumber, take: perPage})}>{pageNumber}</Button>
+                                    <Button key={`footer-button-${pageNumber}`} className="page-button number" variant={currentPage !== pageNumber ? 'outlined' : 'contained'} onClick={() => handlePageButtonPress(pageNumber)}>{pageNumber}</Button>
                                 )
                             })}
-                            <Button className="page-button end" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: lastPage, take: perPage})} disabled={currentPage === lastPage}>
-                                ≫
-                            </Button>
-                            <Button className="page-button next" variant='outlined' onClick={() =>  onGridChange({...gridFilters, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage})} disabled={currentPage === lastPage}>
+                            <Button className="page-button next" variant='outlined' onClick={handleNextButtonPress} disabled={currentPage === lastPage}>
                                 &gt;
+                            </Button>
+                            <Button className="page-button last" variant='outlined' onClick={handleLastButtonPress} disabled={currentPage === lastPage}>
+                                ≫
                             </Button>
                         </Stack>
 
@@ -83,12 +133,12 @@ const GridFooter = (props: GridFooterProps) => {
                 <tr className='footer-dropdown' style={{justifyContent: 'flex-end'}}>
                     <td style={{width: 80}}>
                         <FormControl fullWidth size='small' variant='outlined'>
-                            <InputLabel id="demo-simple-select-label">Page Size</InputLabel>
+                            <InputLabel id="page-size-select-label">Page Size</InputLabel>
                             <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
+                                labelId="page-size-select-label"
+                                id="page-size-select"
                                 value={pagination.perPage}
-                                label="Age"
+                                label="Page Size"
                                 onChange={(event, data) => handlePageSelection(event.target.value as number)}
                             >
                                 <MenuItem value={20}>20</MenuItem>

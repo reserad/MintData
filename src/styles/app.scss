@@ -148,12 +148,12 @@ tfoot {
         padding: 0px;
     }
 
-    &.end {
+    &.last {
         width: 40px;
         min-width: 40px;
     }
 
-    &.begin {
+    &.first {
         width: 40px;
         min-width: 40px;
     }
@@ -231,10 +231,10 @@ tfoot {
     .page-button.number {
         display: flex;
     }
-    .page-button.begin {
+    .page-button.first {
         display: flex;
     }
-    .page-button.end {
+    .page-button.last {
         display: flex;
     }
     .page-button.next {
@@ -248,12 +248,6 @@ tfoot {
 
 @media all and (max-width: 919px) {
     .page-button.number {
-        display: none;
-    }
-    .page-button.end {
-        display: none;
-    }
-    .page-button.begin {
         display: none;
     }
     .page-button.next {
