@@ -3,7 +3,7 @@ export type GridFilters = {
     direction: 'asc' | 'desc',
     page: number,
     take: number;
-    filters: GridPayloadFilter[]
+    columnFilters: GridPayloadFilter[]
 }
 
 export type GridPayloadFilter = {

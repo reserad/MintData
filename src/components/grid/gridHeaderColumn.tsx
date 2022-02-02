@@ -11,31 +11,31 @@ type GridHeaderProps = {
 } & GridColumn
 
 export const getNewColumFilters = (gridFilters: GridFilters, columnName: string, filterType: GridColumnFilterType, value: string): GridPayloadFilter[] => {
-    let newFilters: GridPayloadFilter[] = gridFilters.filters;
+    let newColumnFilters: GridPayloadFilter[] = gridFilters.columnFilters;
 
-    let filterColumns = gridFilters.filters.map(x => x.column);
+    let filterColumns = gridFilters.columnFilters.map(x => x.column);
 
     if (value !== '') {
         if (!filterColumns.includes(columnName)) {
-            newFilters.push({
+            newColumnFilters.push({
                 column: columnName,
                 value,
                 filterType
             })
         } else {
-            for (let filterColumnIndex = 0; filterColumnIndex < newFilters.length; filterColumnIndex++ ) {
-                if (newFilters[filterColumnIndex].column === columnName) {
-                    newFilters[filterColumnIndex].value = value;
+            newColumnFilters.forEach(columnFilter => {
+                if (columnFilter.column === columnName) {
+                    columnFilter.value = value;
                 }
-            }
+            });
         }
     } else {
         if (filterColumns.includes(columnName)) {
-            newFilters = gridFilters.filters.filter(x => x.column !== columnName);
+            newColumnFilters = gridFilters.columnFilters.filter(x => x.column !== columnName);
         }
     }
 
-    return newFilters;
+    return newColumnFilters;
 }
 
 const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
@@ -44,7 +44,13 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
 
     const handleFilterChange = (value: string) => {
         const newFilters = getNewColumFilters(gridFilters, name, filterType, value);
-        onGridChange({...gridFilters, filters: newFilters});
+        onGridChange({...gridFilters, columnFilters: newFilters});
+    }
+
+    const handleOnSortClick = () => {
+        if (enableSort) {
+            onGridChange({...gridFilters, sortBy: name, direction: gridFilters.direction === 'asc' ? 'desc' : 'asc'});
+        }
     }
 
     return (
@@ -58,7 +64,7 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
                         <TextField variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} />
                     }
                 </div>
-                <div className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={enableSort ? () => onGridChange({...gridFilters, sortBy: name, direction: gridFilters.direction === 'asc' ? 'desc' : 'asc'}) : null}>{title}</div>
+                <div className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>
             </th>
         </tr>
     );

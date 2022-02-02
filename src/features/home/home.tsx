@@ -17,7 +17,7 @@ import { GridColumnFilterType } from '../../models/gridColumn';
 const Home: React.FC = () => {
     const dispatch = useDispatch();
     const { isGettingTransactions, transactionsError } = useSelector(homeSelector) as HomePayload;
-    const [gridFilters, setGridFilters] = useState<GridFilters>({page: 1, take: 20, sortBy: null, direction: 'desc', filters: []});
+    const [gridFilters, setGridFilters] = useState<GridFilters>({page: 1, take: 20, sortBy: null, direction: 'desc', columnFilters: []});
     const [grid, setGrid] = useState<TransactionsGrid>({data: [], pagination: null});
     const [monthlySpending, setMonthlySpending] = useState<Transaction[]>([]);
     const [isLoadingGrid, setIsLoadingGrid] = useState(true);
@@ -37,8 +37,8 @@ const Home: React.FC = () => {
     }, [month])
 
     const loadGrid = async (gridFilters: GridFilters) => {
-        const {page, take, sortBy, direction, filters} = gridFilters;
-        const result = await transactionsService.grid(page, take, sortBy, direction, filters);
+        const {page, take, sortBy, direction, columnFilters} = gridFilters;
+        const result = await transactionsService.grid(page, take, sortBy, direction, columnFilters);
         setGrid(result);
         setIsLoadingGrid(false);
     }

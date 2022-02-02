@@ -8,7 +8,7 @@ test('test adding new filter', () => {
         page: 0,
         take: 20,
         direction: 'asc',
-        filters: []
+        columnFilters: []
     };
     let filters = getNewColumFilters(existingFilters, 'test', GridColumnFilterType.Contains, 'abc');
 
@@ -24,7 +24,7 @@ test('test updating filter', () => {
         page: 0,
         take: 20,
         direction: 'asc',
-        filters: [{
+        columnFilters: [{
             column: 'test',
             filterType: GridColumnFilterType.Contains,
             value: 'abc'
@@ -44,7 +44,7 @@ test('test remove filter', () => {
         page: 0,
         take: 20,
         direction: 'asc',
-        filters: [{
+        columnFilters: [{
             column: 'test',
             filterType: GridColumnFilterType.Contains,
             value: 'abc'

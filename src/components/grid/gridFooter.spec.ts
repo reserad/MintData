@@ -40,7 +40,7 @@ describe('When the current page of the grid is 5', () => {
     const gridFooterProps: GridFooterProps = {
         gridFilters: {
             direction: 'asc',
-            filters: [],
+            columnFilters: [],
             page: 5,
             sortBy: '',
             take: 20
@@ -59,7 +59,7 @@ describe('When the current page of the grid is 5', () => {
     test('Expect the page to be 1', () => {
         const expectedGridFilters: GridFilters = {
             direction: 'asc',
-            filters: [],
+            columnFilters: [],
             page: 1,
             sortBy: '',
             take: 20
@@ -71,7 +71,7 @@ describe('When the current page of the grid is 5', () => {
     test('Expect the page to be 4', () => {
         const expectedGridFilters: GridFilters = {
             direction: 'asc',
-            filters: [],
+            columnFilters: [],
             page: 4,
             sortBy: '',
             take: 20
@@ -83,7 +83,7 @@ describe('When the current page of the grid is 5', () => {
     test('Expect the page to be 6', () => {
         const expectedGridFilters: GridFilters = {
             direction: 'asc',
-            filters: [],
+            columnFilters: [],
             page: 6,
             sortBy: '',
             take: 20
@@ -95,7 +95,7 @@ describe('When the current page of the grid is 5', () => {
     test('Expect the page to be 100', () => {
         const expectedGridFilters: GridFilters = {
             direction: 'asc',
-            filters: [],
+            columnFilters: [],
             page: 100,
             sortBy: '',
             take: 20
