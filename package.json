@@ -3,12 +3,10 @@
     "version": "1.0.0",
     "main": "",
     "license": "MIT",
-    "engines": {
-        "node": "12.x"
-    },
     "scripts": {
         "start": "webpack-dev-server",
-        "test": "jest"
+        "test": "jest",
+        "test:ci": "jest --ci --coverage"
     },
     "dependencies": {
         "@emotion/react": "^11.7.1",
