@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Cell, Legend, Pie, PieChart, Sector } from "recharts";
 import CurrencyFormatter from "../helpers/currencyFormatter";
+import { PieChartData } from "../models/pieChartData";
 import { Transaction } from "../models/transaction";
 
 type MonthlySpendingPieChartProps = {
@@ -11,6 +12,35 @@ type MonthlySpendingPieChartProps = {
 const colors = ['#0275d8','#5cb85c','#5bc0de','#f0ad4e','#d9534f','#292b2c','#fd5b78','#cb3d5e','#7e90a9','#536878','#191919','#f06545','#40d3a5','#acc2f1','#c26591','#3f60b0','#3a4439'];
 const radian = Math.PI / 180;
 
+export const getMonthlySpendingPieChartData = (transactions: Transaction[]): PieChartData[] => {
+    const categories = [...new Set(
+        transactions.map(transaction => transaction.category)
+    )];
+
+    return categories.map(category => {
+        let categoryTotal = 0;
+        let categoryTransactions: Transaction[] = [];
+        transactions.forEach(transaction => {
+            if (transaction.category === category) {
+                categoryTransactions.push(transaction);
+                categoryTotal += transaction.amount;
+            }
+        });
+        return {
+            name: category,
+            value: categoryTotal,
+            transactions: categoryTransactions
+        };
+    });
+}
+
+export const filterInsiginificantCategories = (pieChartData: PieChartData[]): PieChartData[] => {
+    const totalMonthlyTransactionsAmount = pieChartData.map(p => p.value).reduce((sum, x) => sum + x);
+    return pieChartData.filter(d => {
+        return (d.value * 100 / (totalMonthlyTransactionsAmount)) > 1
+    });
+}
+
 export const MonthlySpendingPieChart = (props: MonthlySpendingPieChartProps) => {
     const {data, size = 'large'} = props;
 
@@ -18,40 +48,16 @@ export const MonthlySpendingPieChart = (props: MonthlySpendingPieChartProps) => 
         return <div style={{marginTop: 10}}>No data available</div>
     }
 
-    const [pieData, setPieData] = useState([]);
+    const [pieData, setPieData] = useState<PieChartData[]>([]);
     const [pieActiveIndex, setPieActiveIndex] = useState(0);
     useEffect(() => {
         formattedData(data);
     }, [data]);
 
     const formattedData = (transactions: Transaction[]) => {
-        let categories = [...new Set(
-            transactions.map(transaction => transaction.category)
-        )];
-
-        let pie = categories.map(category => {
-            let categoryTotal = 0;
-            let categoryTransactions: Transaction[] = [];
-            transactions.forEach(transaction => {
-                if (transaction.category === category) {
-                    categoryTransactions.push(transaction);
-                    categoryTotal += parseFloat(transaction.amount);
-                }
-            });
-            return {
-                name: category,
-                value: categoryTotal,
-                transactions: categoryTransactions
-            }
-        });
-
-        const totalMonthlyTransactionsAmount = pie.map(p => p.value).reduce((sum, x) => sum + x);
-
-        pie = pie.filter(d => {
-            return (d.value * 100 / (totalMonthlyTransactionsAmount)) > 1
-        });
-        
-        setPieData(pie);
+        let pieData = getMonthlySpendingPieChartData(transactions);
+        pieData = filterInsiginificantCategories(pieData);
+        setPieData(pieData);
     }
 
     const renderCustomizedLabel = (props: any) => {
