@@ -12,7 +12,5 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Jest run
         run: yarn test:ci
-      - name: Generating coverage badges
-        uses: jpb06/jest-badges-action@latest
-        with:
-          branches: main
+      - name: Jest badges generation action
+        uses: jpb06/jest-badges-action@v1.8.6
