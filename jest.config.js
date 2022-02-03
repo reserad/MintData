@@ -9,5 +9,5 @@ module.exports = {
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
-    coverageReporters: ["json-summary"]
+    "coverageReporters": ["json-summary"]
 }
