@@ -108,8 +108,8 @@ const Home: React.FC = () => {
                             width={95}
                             title="Amount"
                             filterType={GridColumnFilterType.Equals}
-                            render={(value: string) => {
-                                return <div>{CurrencyFormatter.format(parseFloat(value))}</div>
+                            render={(value: number) => {
+                                return <div>{CurrencyFormatter.format(value)}</div>
                             }}
                         />
                     </Grid>
