@@ -7,6 +7,9 @@ jobs:
     # Necessary to push the generated badges to the repo
     - name: Check out repository code
       uses: actions/checkout@v2
+    - name: Install dependencies
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: yarn install --frozen-lockfile
     # Necessary to generate the coverage report.
     - name: Tests
       run: yarn test:ci
