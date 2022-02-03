@@ -7,7 +7,8 @@
         "start": "webpack-dev-server",
         "test": "jest",
         "cover": "jest --coverage",
-        "make-badges": "istanbul-badges-readme"
+        "make-badges": "istanbul-badges-readme",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@emotion/react": "^11.7.1",
@@ -35,6 +36,7 @@
         "css-loader": "^3.6.0",
         "dotenv-webpack": "^7.0.3",
         "file-loader": "^6.2.0",
+        "husky": "^7.0.4",
         "istanbul-badges-readme": "^1.8.1",
         "jest": "^27.4.7",
         "node-sass": "^7.0.0",
