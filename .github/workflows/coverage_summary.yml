@@ -1,0 +1,16 @@
+name: Jest CI
+on: [push, pull_request]
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+    # Necessary to push the generated badges to the repo
+    - name: Check out repository code
+      uses: actions/checkout@v2
+    # Necessary to generate the coverage report.
+    - name: Tests
+      run: yarn test:ci
+    - name: Generating coverage badges
+      uses: jpb06/jest-badges-action@latest
+      with:
+          branches: main
