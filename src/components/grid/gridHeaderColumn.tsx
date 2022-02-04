@@ -3,7 +3,7 @@ import React from "react";
 import { GridColumn, GridColumnFilterType } from "../../models/gridColumn";
 import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
 
-type GridHeaderProps = {
+export type GridHeaderProps = {
     onGridChange: (gridFilters: GridFilters) => void;
     gridFilters: GridFilters;
     enableSort: boolean;
@@ -61,7 +61,7 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
             <th>
                 <div style={{height: 45, marginLeft: 5, marginRight: 5}}>
                     {filterType &&
-                        <TextField variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} fullWidth={true} />
+                        <TextField data-testid={`${name}-filter`} variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} fullWidth={true} />
                     }
                 </div>
                 <div className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>

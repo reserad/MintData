@@ -1,6 +1,8 @@
+import * as React from 'react';
 import { GridColumnFilterType } from "../../models/gridColumn";
-import { GridFilters } from "../../models/gridFilters";
-import { getNewColumFilters } from "./gridHeaderColumn";
+import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
+import GridHeaderColumn, { getNewColumFilters, GridHeaderProps } from "./gridHeaderColumn";
+import { render, RenderResult } from '@testing-library/react';
 
 test('test adding new filter', () => {
     let existingFilters: GridFilters = {
@@ -54,3 +56,51 @@ test('test remove filter', () => {
 
     expect(filters.length == 0).toBeTruthy();
 });
+
+describe('<GridHeaderColumn />', () => {
+    let gridHeaderProps: GridHeaderProps;
+
+    beforeEach(() => {
+        gridHeaderProps = {
+            gridFilters: {
+                columnFilters: [],
+                direction: 'asc',
+                page: 1,
+                sortBy: '',
+                take: 20
+            },
+            enableSort: false,
+            title: "Test",
+            name: "test",
+            onGridChange: () => {} 
+        };
+    });
+    
+    it('no filter found', () => {
+        const body = render(
+            <table>
+                <tbody>
+                    <GridHeaderColumn 
+                        {...gridHeaderProps}
+                    />
+                </tbody>
+            </table>
+        );
+        expect(body.queryByTestId('test-filter')).toBeFalsy();
+    });
+
+    it('filter found', () => {
+        gridHeaderProps.filterType = GridColumnFilterType.Contains;
+
+        const body = render(
+            <table>
+                <tbody>
+                    <GridHeaderColumn 
+                        {...gridHeaderProps}
+                    />
+                </tbody>
+            </table>
+        );
+        expect(body.queryByTestId('test-filter')).toBeTruthy();
+    });
+  });

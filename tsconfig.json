@@ -2,13 +2,15 @@
     "compilerOptions": {
       "outDir": "./dist/",
       "noImplicitAny": true,
-      "module": "es6",
+      "module": "ESNext",
       "target": "ES2015",
       "jsx": "react",
       "sourceMap": true,
       "allowSyntheticDefaultImports": true,
       "moduleResolution": "node",
       "experimentalDecorators": true,
-      "lib": ["es2015", "es2017", "dom"]
-    }
+      "lib": ["es2015", "es2017", "dom", "ESNext"],
+      "esModuleInterop": true
+    },
+    "exclude": ["node_modules"]
 }
