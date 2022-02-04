@@ -61,10 +61,10 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
             <th>
                 <div style={{height: 45, marginLeft: 5, marginRight: 5}}>
                     {filterType &&
-                        <TextField data-testid={`${name}-filter`} variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} fullWidth={true} />
+                        <TextField inputProps={{ "data-testid": `${name}-filter` }} variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} fullWidth={true} />
                     }
                 </div>
-                <div className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>
+                <div data-testid={`${name}-sort`} className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>
             </th>
         </tr>
     );

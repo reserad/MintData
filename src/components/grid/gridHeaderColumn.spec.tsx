@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridColumnFilterType } from "../../models/gridColumn";
 import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
 import GridHeaderColumn, { getNewColumFilters, GridHeaderProps } from "./gridHeaderColumn";
-import { render, RenderResult } from '@testing-library/react';
+import { render, RenderResult, fireEvent } from '@testing-library/react';
 
 test('test adding new filter', () => {
     let existingFilters: GridFilters = {
@@ -72,11 +72,11 @@ describe('<GridHeaderColumn />', () => {
             enableSort: false,
             title: "Test",
             name: "test",
-            onGridChange: () => {} 
+            onGridChange: (gridFilters: GridFilters) => {} 
         };
     });
     
-    it('no filter found', () => {
+    it('Should find no filter', () => {
         const body = render(
             <table>
                 <tbody>
@@ -89,7 +89,7 @@ describe('<GridHeaderColumn />', () => {
         expect(body.queryByTestId('test-filter')).toBeFalsy();
     });
 
-    it('filter found', () => {
+    it('Should find a filter', () => {
         gridHeaderProps.filterType = GridColumnFilterType.Contains;
 
         const body = render(
@@ -103,4 +103,63 @@ describe('<GridHeaderColumn />', () => {
         );
         expect(body.queryByTestId('test-filter')).toBeTruthy();
     });
-  });
+
+    it('Should call onGridChange when changing filter text', () => {
+        const onGridChange = jest.fn();
+        gridHeaderProps.filterType = GridColumnFilterType.Contains;
+        gridHeaderProps.onGridChange = onGridChange;
+
+        const body = render(
+            <table>
+                <tbody>
+                    <GridHeaderColumn 
+                        {...gridHeaderProps}
+                    />
+                </tbody>
+            </table>
+        );
+
+        fireEvent.change(body.queryByTestId('test-filter'), {target: {value: 'test'}})
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+
+    it('Should not call onGridChange when clicking column header text', () => {
+        const onGridChange = jest.fn();
+        gridHeaderProps.onGridChange = onGridChange;
+
+        const body = render(
+            <table>
+                <tbody>
+                    <GridHeaderColumn 
+                        {...gridHeaderProps}
+                    />
+                </tbody>
+            </table>
+        );
+
+        body.queryByTestId('test-sort').click();
+
+        expect(onGridChange).toHaveBeenCalledTimes(0);
+    });
+
+    it('Should call onGridChange when clicking column header text', () => {
+        const onGridChange = jest.fn();
+        gridHeaderProps.enableSort = true;
+        gridHeaderProps.onGridChange = onGridChange;
+
+        const body = render(
+            <table>
+                <tbody>
+                    <GridHeaderColumn 
+                        {...gridHeaderProps}
+                    />
+                </tbody>
+            </table>
+        );
+
+        body.queryByTestId('test-sort').click();
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+});
