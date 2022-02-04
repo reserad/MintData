@@ -109,21 +109,21 @@ const GridFooter = (props: GridFooterProps) => {
                 <tr>
                     <td>
                         <Stack spacing={1} direction='row'>
-                            <Button className="page-button first" variant='outlined' onClick={handleFirstButtonPress} disabled={currentPage === 1}>
+                            <Button data-testid='page-first' className="page-button first" variant='outlined' onClick={handleFirstButtonPress} disabled={currentPage === 1}>
                                 ≪
                             </Button>
-                            <Button className="page-button previous" variant='outlined' onClick={handlePreviousButtonPress} disabled={currentPage === 1}>
+                            <Button data-testid='page-previous' className="page-button previous" variant='outlined' onClick={handlePreviousButtonPress} disabled={currentPage === 1}>
                                 &lt;
                             </Button>
                             {pageButtonIndexes.map(pageNumber => {
                                 return (
-                                    <Button key={`footer-button-${pageNumber}`} className="page-button number" variant={currentPage !== pageNumber ? 'outlined' : 'contained'} onClick={() => handlePageButtonPress(pageNumber)}>{pageNumber}</Button>
+                                    <Button data-testid={`page-${pageNumber}`} key={`footer-button-${pageNumber}`} className="page-button number" variant={currentPage !== pageNumber ? 'outlined' : 'contained'} onClick={() => handlePageButtonPress(pageNumber)}>{pageNumber}</Button>
                                 )
                             })}
-                            <Button className="page-button next" variant='outlined' onClick={handleNextButtonPress} disabled={currentPage === lastPage}>
+                            <Button data-testid='page-next' className="page-button next" variant='outlined' onClick={handleNextButtonPress} disabled={currentPage === lastPage}>
                                 &gt;
                             </Button>
-                            <Button className="page-button last" variant='outlined' onClick={handleLastButtonPress} disabled={currentPage === lastPage}>
+                            <Button data-testid='page-last' className="page-button last" variant='outlined' onClick={handleLastButtonPress} disabled={currentPage === lastPage}>
                                 ≫
                             </Button>
                         </Stack>
@@ -135,6 +135,7 @@ const GridFooter = (props: GridFooterProps) => {
                         <FormControl fullWidth size='small' variant='outlined'>
                             <InputLabel id="page-size-select-label">Page Size</InputLabel>
                             <Select
+                                inputProps={{ "data-testid": 'page-size' }}
                                 labelId="page-size-select-label"
                                 id="page-size-select"
                                 value={pagination.perPage}

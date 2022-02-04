@@ -1,5 +1,7 @@
+import * as React from 'react';
 import { GridFilters } from "../../models/gridFilters";
-import { getNewPageNumber, getNewGridFilters, getPageButtonIndexes, GridFooterProps } from "./gridFooter";
+import { getNewPageNumber, getNewGridFilters, getPageButtonIndexes, GridFooterProps, GridFooter } from "./gridFooter";
+import { render, RenderResult, fireEvent } from '@testing-library/react';
 
 test('test adjusted page number for page size = 20', () => {
     let newPageNumber = getNewPageNumber(5, 200, 20);
@@ -102,5 +104,115 @@ describe('When the current page of the grid is 5', () => {
         };
         const newGridFilters: GridFilters = getNewGridFilters(gridFooterProps, 'last');
         expect(newGridFilters).toEqual(expectedGridFilters)
+    });
+});
+
+describe('<GridFooter />', () => {
+    let gridFooterProps: GridFooterProps;
+    const onGridChange = jest.fn();
+
+    beforeEach(() => {
+        gridFooterProps = {
+            gridFilters: {
+                direction: 'asc',
+                columnFilters: [],
+                page: 5,
+                sortBy: '',
+                take: 20
+            },
+            onGridChange,
+            pagination: {
+                currentPage: 5,
+                from: 100,
+                lastPage: 100,
+                perPage: 20,
+                to: 120,
+                total: 2000
+            }
+        };
+    });
+    
+    test('Expect first page button to call onGridChange', () => {
+        const body = render(
+            <table>
+                <GridFooter 
+                    {...gridFooterProps}
+                />
+            </table>
+        );
+
+        body.queryByTestId('page-first').click();
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+
+    test('Expect last page button to call onGridChange', () => {
+        const body = render(
+            <table>
+                <GridFooter 
+                    {...gridFooterProps}
+                />
+            </table>
+        );
+
+        body.queryByTestId('page-last').click();
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+
+    test('Expect next page button to call onGridChange', () => {
+        const body = render(
+            <table>
+                <GridFooter 
+                    {...gridFooterProps}
+                />
+            </table>
+        );
+
+        body.queryByTestId('page-next').click();
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+
+    test('Expect previous page button to call onGridChange', () => {
+        const body = render(
+            <table>
+                <GridFooter 
+                    {...gridFooterProps}
+                />
+            </table>
+        );
+
+        body.queryByTestId('page-previous').click();
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+
+    test('Expect page number button to call onGridChange', () => {
+        const body = render(
+            <table>
+                <GridFooter 
+                    {...gridFooterProps}
+                />
+            </table>
+        );
+
+        body.queryByTestId('page-1').click();
+
+        expect(onGridChange).toHaveBeenCalled();
+    });
+
+    test('Expect changing page size to call onGridChange', () => {
+        const body = render(
+            <table>
+                <GridFooter 
+                    {...gridFooterProps}
+                />
+            </table>
+        );
+
+        fireEvent.change(body.queryByTestId('page-size'), {target: {value: 50}});
+
+        expect(onGridChange).toHaveBeenCalled();
     });
 });
