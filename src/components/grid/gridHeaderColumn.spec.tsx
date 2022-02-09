@@ -2,7 +2,7 @@ import * as React from 'react';
 import { GridColumnFilterType } from "../../models/gridColumn";
 import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
 import GridHeaderColumn, { getNewColumFilters, GridHeaderProps } from "./gridHeaderColumn";
-import { render, RenderResult, fireEvent } from '@testing-library/react';
+import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react';
 
 test('test adding new filter', () => {
     let existingFilters: GridFilters = {
@@ -104,7 +104,7 @@ describe('<GridHeaderColumn />', () => {
         expect(body.queryByTestId('test-filter')).toBeTruthy();
     });
 
-    it('Should call onGridChange when changing filter text', () => {
+    it('Should call onGridChange when changing filter text', async () => {
         const onGridChange = jest.fn();
         gridHeaderProps.filterType = GridColumnFilterType.Contains;
         gridHeaderProps.onGridChange = onGridChange;
@@ -121,7 +121,8 @@ describe('<GridHeaderColumn />', () => {
 
         fireEvent.change(body.queryByTestId('test-filter'), {target: {value: 'test'}})
 
-        expect(onGridChange).toHaveBeenCalled();
+        //have to wait for 500ms debounce
+        await waitFor(() => expect(onGridChange).toHaveBeenCalled(), {timeout: 550});
     });
 
     it('Should not call onGridChange when clicking column header text', () => {

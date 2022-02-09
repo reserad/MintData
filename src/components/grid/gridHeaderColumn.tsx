@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import React from "react";
 import { GridColumn, GridColumnFilterType } from "../../models/gridColumn";
 import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
+import {debounce} from 'lodash';
 
 export type GridHeaderProps = {
     onGridChange: (gridFilters: GridFilters) => void;
@@ -41,6 +42,9 @@ export const getNewColumFilters = (gridFilters: GridFilters, columnName: string,
 const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
     const { width = null, className = null, title, onGridChange, gridFilters, name, enableSort, filterType } = props;
 
+    const handleDebouncedFilterChange = debounce((value: string) => {
+        handleFilterChange(value);
+    }, 500);
 
     const handleFilterChange = (value: string) => {
         const newFilters = getNewColumFilters(gridFilters, name, filterType, value);
@@ -61,7 +65,7 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
             <th>
                 <div style={{height: 45, marginLeft: 5, marginRight: 5}}>
                     {filterType &&
-                        <TextField inputProps={{ "data-testid": `${name}-filter` }} variant='outlined' label={title} size="small" onChange={(event) => handleFilterChange(event.target.value)} fullWidth={true} />
+                        <TextField inputProps={{ "data-testid": `${name}-filter` }} variant='outlined' label={title} size="small" onChange={(event) => handleDebouncedFilterChange(event.target.value)} fullWidth={true} />
                     }
                 </div>
                 <div data-testid={`${name}-sort`} className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>
