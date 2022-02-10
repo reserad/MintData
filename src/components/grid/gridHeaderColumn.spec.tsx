@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { GridColumnFilterType } from "../../models/gridColumn";
-import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
+import { GridModifiers } from "../../models/gridModifiers";
 import GridHeaderColumn, { getNewColumFilters, GridHeaderProps } from "./gridHeaderColumn";
 import { render, RenderResult, fireEvent, waitFor } from '@testing-library/react';
 
 test('test adding new filter', () => {
-    let existingFilters: GridFilters = {
+    let existingFilters: GridModifiers = {
         sortBy: '',
         page: 0,
         take: 20,
@@ -21,7 +21,7 @@ test('test adding new filter', () => {
 });
 
 test('test updating filter', () => {
-    let existingFilters: GridFilters = {
+    let existingFilters: GridModifiers = {
         sortBy: '',
         page: 0,
         take: 20,
@@ -41,7 +41,7 @@ test('test updating filter', () => {
 });
 
 test('test remove filter', () => {
-    let existingFilters: GridFilters = {
+    let existingFilters: GridModifiers = {
         sortBy: '',
         page: 0,
         take: 20,
@@ -62,7 +62,7 @@ describe('<GridHeaderColumn />', () => {
 
     beforeEach(() => {
         gridHeaderProps = {
-            gridFilters: {
+            gridModifiers: {
                 columnFilters: [],
                 direction: 'asc',
                 page: 1,
@@ -72,7 +72,7 @@ describe('<GridHeaderColumn />', () => {
             enableSort: false,
             title: "Test",
             name: "test",
-            onGridChange: (gridFilters: GridFilters) => {} 
+            onGridChange: (gridModifiers: GridModifiers) => {} 
         };
     });
     

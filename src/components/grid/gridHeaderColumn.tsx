@@ -1,20 +1,20 @@
 import { TextField } from "@mui/material";
 import React from "react";
 import { GridColumn, GridColumnFilterType } from "../../models/gridColumn";
-import { GridFilters, GridPayloadFilter } from "../../models/gridFilters";
+import { GridFilter, GridModifiers } from "../../models/gridModifiers";
 import {debounce} from 'lodash';
 
 export type GridHeaderProps = {
-    onGridChange: (gridFilters: GridFilters) => void;
-    gridFilters: GridFilters;
+    onGridChange: (gridModifiers: GridModifiers) => void;
+    gridModifiers: GridModifiers;
     enableSort: boolean;
     filterType?: string;
 } & GridColumn
 
-export const getNewColumFilters = (gridFilters: GridFilters, columnName: string, filterType: GridColumnFilterType, value: string): GridPayloadFilter[] => {
-    let newColumnFilters: GridPayloadFilter[] = gridFilters.columnFilters;
+export const getNewColumFilters = (gridModifiers: GridModifiers, columnName: string, filterType: GridColumnFilterType, value: string): GridFilter[] => {
+    let newColumnFilters: GridFilter[] = gridModifiers.columnFilters;
 
-    let filterColumns = gridFilters.columnFilters.map(x => x.column);
+    let filterColumns = gridModifiers.columnFilters.map(x => x.column);
 
     if (value !== '') {
         if (!filterColumns.includes(columnName)) {
@@ -32,7 +32,7 @@ export const getNewColumFilters = (gridFilters: GridFilters, columnName: string,
         }
     } else {
         if (filterColumns.includes(columnName)) {
-            newColumnFilters = gridFilters.columnFilters.filter(x => x.column !== columnName);
+            newColumnFilters = gridModifiers.columnFilters.filter(x => x.column !== columnName);
         }
     }
 
@@ -40,20 +40,20 @@ export const getNewColumFilters = (gridFilters: GridFilters, columnName: string,
 }
 
 const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
-    const { width = null, className = null, title, onGridChange, gridFilters, name, enableSort, filterType } = props;
+    const { width = null, className = null, title, onGridChange, gridModifiers, name, enableSort, filterType } = props;
 
     const handleDebouncedFilterChange = debounce((value: string) => {
         handleFilterChange(value);
     }, 500);
 
     const handleFilterChange = (value: string) => {
-        const newFilters = getNewColumFilters(gridFilters, name, filterType, value);
-        onGridChange({...gridFilters, columnFilters: newFilters});
+        const newFilters = getNewColumFilters(gridModifiers, name, filterType, value);
+        onGridChange({...gridModifiers, columnFilters: newFilters});
     }
 
     const handleOnSortClick = () => {
         if (enableSort) {
-            onGridChange({...gridFilters, sortBy: name, direction: gridFilters.direction === 'asc' ? 'desc' : 'asc'});
+            onGridChange({...gridModifiers, sortBy: name, direction: gridModifiers.direction === 'asc' ? 'desc' : 'asc'});
         }
     }
 
@@ -68,7 +68,7 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
                         <TextField inputProps={{ "data-testid": `${name}-filter` }} variant='outlined' label={title} size="small" onChange={(event) => handleDebouncedFilterChange(event.target.value)} fullWidth={true} />
                     }
                 </div>
-                <div data-testid={`${name}-sort`} className={`${enableSort && 'sortable'} ${gridFilters.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>
+                <div data-testid={`${name}-sort`} className={`${enableSort && 'sortable'} ${gridModifiers.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>
             </th>
         </tr>
     );

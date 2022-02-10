@@ -1,24 +1,24 @@
 import React from "react";
 import { GridColumn } from "../../models/gridColumn";
-import { GridFilters } from "../../models/gridFilters";
+import { GridModifiers } from "../../models/gridModifiers";
 import GridHeaderColumn from "./gridHeaderColumn";
 
 type GridHeaderProps = {
     columns: GridColumn[]
-    onGridChange: (gridFilters: GridFilters) => void;
-    gridFilters: GridFilters;
+    onGridChange: (gridModifiers: GridModifiers) => void;
+    gridModifiers: GridModifiers;
     enableSort: boolean;
 };
 
 const GridHeader = (props: GridHeaderProps) => {
-    const {columns, gridFilters, enableSort, onGridChange} = props;
+    const {columns, gridModifiers, enableSort, onGridChange} = props;
     return (
         <thead>
             {columns.map((column, i) => (
                 <GridHeaderColumn 
                     key={i}
                     onGridChange={onGridChange} 
-                    gridFilters={gridFilters}
+                    gridModifiers={gridModifiers}
                     enableSort={enableSort}
                     {...column}  />
             ))}

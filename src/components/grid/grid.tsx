@@ -1,6 +1,6 @@
 import React from "react";
 import { GridColumn } from "../../models/gridColumn";
-import { GridFilters } from "../../models/gridFilters";
+import { GridModifiers } from "../../models/gridModifiers";
 import { TransactionsGrid } from "../../models/transactionsGrid";
 import GridBody from "./gridBody";
 import { GridFooter } from "./gridFooter";
@@ -11,12 +11,12 @@ export type GridProps = {
     gridData: TransactionsGrid;
     enableFooter?: boolean;
     enableSort?: boolean;
-    gridFilters: GridFilters;
-    onGridChange: (gridFilters: GridFilters) => void;
+    gridModifiers: GridModifiers;
+    onGridChange: (gridModifiers: GridModifiers) => void;
 };
 
 const Grid: React.FunctionComponent<GridProps> = (props) => {
-    const { children, gridData, gridFilters, onGridChange, enableFooter = false, enableSort = false} = props;
+    const { children, gridData, gridModifiers, onGridChange, enableFooter = false, enableSort = false} = props;
     const {data, pagination} = gridData;
     let componentChildren = children as React.ReactElement<any>[];
 
@@ -39,7 +39,7 @@ const Grid: React.FunctionComponent<GridProps> = (props) => {
             <GridHeader 
                 columns={columnDefinitions} 
                 onGridChange={onGridChange} 
-                gridFilters={gridFilters} 
+                gridModifiers={gridModifiers} 
                 enableSort={enableSort} />
             <GridBody 
                 data={data} 
@@ -47,7 +47,7 @@ const Grid: React.FunctionComponent<GridProps> = (props) => {
             {enableFooter && 
                 <GridFooter
                     onGridChange={onGridChange} 
-                    gridFilters={gridFilters} 
+                    gridModifiers={gridModifiers} 
                     pagination={pagination} />
             }
         </table>

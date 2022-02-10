@@ -1,12 +1,12 @@
-export type GridFilters = {
+export type GridModifiers = {
     sortBy: string,
     direction: 'asc' | 'desc',
     page: number,
     take: number;
-    columnFilters: GridPayloadFilter[]
+    columnFilters: GridFilter[]
 }
 
-export type GridPayloadFilter = {
+export type GridFilter = {
     column: string;
     value: string;
     filterType: string;

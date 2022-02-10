@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { GridFilters } from "../../models/gridFilters";
-import { getNewPageNumber, getNewGridFilters, getPageButtonIndexes, GridFooterProps, GridFooter } from "./gridFooter";
+import { GridModifiers } from "../../models/gridModifiers";
+import { getNewPageNumber, getNewGridModifiers, getPageButtonIndexes, GridFooterProps, GridFooter } from "./gridFooter";
 import { render, RenderResult, fireEvent } from '@testing-library/react';
 
 test('test adjusted page number for page size = 20', () => {
@@ -40,7 +40,7 @@ describe('When the grid has 100 pages', () => {
 
 describe('When the current page of the grid is 5', () => {
     const gridFooterProps: GridFooterProps = {
-        gridFilters: {
+        gridModifiers: {
             direction: 'asc',
             columnFilters: [],
             page: 5,
@@ -59,51 +59,51 @@ describe('When the current page of the grid is 5', () => {
     };
 
     test('Expect the page to be 1', () => {
-        const expectedGridFilters: GridFilters = {
+        const expectedGridModifiers: GridModifiers = {
             direction: 'asc',
             columnFilters: [],
             page: 1,
             sortBy: '',
             take: 20
         };
-        const newGridFilters: GridFilters = getNewGridFilters(gridFooterProps, 'first');
-        expect(newGridFilters).toEqual(expectedGridFilters)
+        const newGridModifiers: GridModifiers = getNewGridModifiers(gridFooterProps, 'first');
+        expect(newGridModifiers).toEqual(expectedGridModifiers)
     });
 
     test('Expect the page to be 4', () => {
-        const expectedGridFilters: GridFilters = {
+        const expectedGridModifiers: GridModifiers = {
             direction: 'asc',
             columnFilters: [],
             page: 4,
             sortBy: '',
             take: 20
         };
-        const newGridFilters: GridFilters = getNewGridFilters(gridFooterProps, 'previous');
-        expect(newGridFilters).toEqual(expectedGridFilters)
+        const newGridModifiers: GridModifiers = getNewGridModifiers(gridFooterProps, 'previous');
+        expect(newGridModifiers).toEqual(expectedGridModifiers)
     });
 
     test('Expect the page to be 6', () => {
-        const expectedGridFilters: GridFilters = {
+        const expectedGridModifiers: GridModifiers = {
             direction: 'asc',
             columnFilters: [],
             page: 6,
             sortBy: '',
             take: 20
         };
-        const newGridFilters: GridFilters = getNewGridFilters(gridFooterProps, 'next');
-        expect(newGridFilters).toEqual(expectedGridFilters)
+        const newGridModifiers: GridModifiers = getNewGridModifiers(gridFooterProps, 'next');
+        expect(newGridModifiers).toEqual(expectedGridModifiers)
     });
 
     test('Expect the page to be 100', () => {
-        const expectedGridFilters: GridFilters = {
+        const expectedGridModifiers: GridModifiers = {
             direction: 'asc',
             columnFilters: [],
             page: 100,
             sortBy: '',
             take: 20
         };
-        const newGridFilters: GridFilters = getNewGridFilters(gridFooterProps, 'last');
-        expect(newGridFilters).toEqual(expectedGridFilters)
+        const newGridModifiers: GridModifiers = getNewGridModifiers(gridFooterProps, 'last');
+        expect(newGridModifiers).toEqual(expectedGridModifiers)
     });
 });
 
@@ -113,7 +113,7 @@ describe('<GridFooter />', () => {
 
     beforeEach(() => {
         gridFooterProps = {
-            gridFilters: {
+            gridModifiers: {
                 direction: 'asc',
                 columnFilters: [],
                 page: 5,

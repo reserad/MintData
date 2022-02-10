@@ -1,13 +1,13 @@
 import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import React from 'react';
-import { GridFilters } from '../../models/gridFilters';
+import { GridModifiers } from '../../models/gridModifiers';
 import { Pagination } from '../../models/pagination';
 
 type GridFooterProps = {
     pagination: Pagination;
-    gridFilters: GridFilters;
-    onGridChange: (gridFilters: GridFilters) => void;
+    gridModifiers: GridModifiers;
+    onGridChange: (gridModifiers: GridModifiers) => void;
 }
 
 //Will show max 5 to left and 4 to right of current page.
@@ -50,57 +50,57 @@ export const getNewPageNumber = (currentPage: number, from: number, take: number
     return newPage;
 }
 
-export const getNewGridFilters = (footerProps: GridFooterProps, paginationAction: 'first' | 'last' | 'next' | 'previous' | 'pageNumber', pageNumber: number = 0): GridFilters => {
-    const {gridFilters, pagination} = footerProps;
+export const getNewGridModifiers = (footerProps: GridFooterProps, paginationAction: 'first' | 'last' | 'next' | 'previous' | 'pageNumber', pageNumber: number = 0): GridModifiers => {
+    const {gridModifiers, pagination} = footerProps;
     const {perPage, lastPage, currentPage} = pagination;
 
     switch(paginationAction) {
         case 'first':
-            return {...gridFilters, page: 1, take: perPage};
+            return {...gridModifiers, page: 1, take: perPage};
         case 'last':
-            return {...gridFilters, page: lastPage, take: perPage};
+            return {...gridModifiers, page: lastPage, take: perPage};
         case 'previous':
-            return {...gridFilters, page: currentPage === 1 ? 1 : currentPage-1, take: perPage};
+            return {...gridModifiers, page: currentPage === 1 ? 1 : currentPage-1, take: perPage};
         case 'next':
-            return {...gridFilters, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage}
+            return {...gridModifiers, page: currentPage === lastPage ? lastPage : currentPage+1, take: perPage}
         default:
-            return {...gridFilters, page: pageNumber, take: perPage};
+            return {...gridModifiers, page: pageNumber, take: perPage};
     }
 }
 
 const GridFooter = (props: GridFooterProps) => {
-    const {pagination, onGridChange, gridFilters} = props;
+    const {pagination, onGridChange, gridModifiers} = props;
     const {currentPage, lastPage, perPage, from } = pagination;
     const pageButtonIndexes = getPageButtonIndexes(currentPage, lastPage);
 
     const handlePageSelection = (take: number) => {
         const newPage = getNewPageNumber(currentPage, from, take);
-        onGridChange({...gridFilters, page: newPage, take});
+        onGridChange({...gridModifiers, page: newPage, take});
     }
 
     const handlePreviousButtonPress = () => {
-        const newGridFilters = getNewGridFilters(props, 'previous');
-        onGridChange(newGridFilters);
+        const newGridModifiers = getNewGridModifiers(props, 'previous');
+        onGridChange(newGridModifiers);
     }
 
     const handleFirstButtonPress = () => {
-        const newGridFilters = getNewGridFilters(props, 'first');
-        onGridChange(newGridFilters);
+        const newGridModifiers = getNewGridModifiers(props, 'first');
+        onGridChange(newGridModifiers);
     }
 
     const handlePageButtonPress = (pageNumber: number) => {
-        const newGridFilters = getNewGridFilters(props, 'pageNumber', pageNumber);
-        onGridChange(newGridFilters);
+        const newGridModifiers = getNewGridModifiers(props, 'pageNumber', pageNumber);
+        onGridChange(newGridModifiers);
     }
 
     const handleLastButtonPress = () => {
-        const newGridFilters = getNewGridFilters(props, 'last');
-        onGridChange(newGridFilters);
+        const newGridModifiers = getNewGridModifiers(props, 'last');
+        onGridChange(newGridModifiers);
     }
 
     const handleNextButtonPress = () => {
-        const newGridFilters = getNewGridFilters(props, 'next');
-        onGridChange(newGridFilters);
+        const newGridModifiers = getNewGridModifiers(props, 'next');
+        onGridChange(newGridModifiers);
     }
 
     const Footer = () => {
