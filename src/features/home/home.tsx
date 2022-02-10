@@ -14,16 +14,6 @@ import CurrencyFormatter from '../../helpers/currencyFormatter';
 import { GridModifiers } from '../../models/gridModifiers';
 import { GridColumnFilterType } from '../../models/gridColumn';
 
-export const provideMonthlySpendingHeaderDropdownOptions = (date: moment.Moment) => {
-    return Array.from(Array(12).keys()).map((i) => {
-        if (i !== 0) {
-            date.subtract(1, 'M');
-        }
-
-        return (<MenuItem key={`${date.format("MM/DD/YYYY")}-${i}`} value={date.format("MM/DD/YYYY")}>{date.format("MMMM YYYY")}</MenuItem>)
-    });
-}
-
 export type MonthlySpendingHeaderProps = {
     selectedMonth: string;
 };
@@ -31,9 +21,19 @@ export type MonthlySpendingHeaderProps = {
 export const MonthlySpendingHeader: React.FunctionComponent<MonthlySpendingHeaderProps> = ({selectedMonth}) => {
     return (
         <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div style={{marginLeft: 20}}>{moment(selectedMonth).format("MMMM YYYY")} Spending</div>
+            <div data-testid="monthly-spending-header" style={{marginLeft: 20}}>{moment(selectedMonth, 'MM/DD/YYYY').format("MMMM YYYY")} Spending</div>
         </div>
     );
+}
+
+export const provideMonthlySpendingHeaderDropdownOptions = (date: moment.Moment) => {
+    return Array.from(Array(12).keys()).map((i) => {
+        if (i !== 0) {
+            date.subtract(1, 'M');
+        }
+
+        return (<MenuItem data-testid={`${date.format("MM/DD/YYYY")}-${i}`} key={`${date.format("MM/DD/YYYY")}-${i}`} value={date.format("MM/DD/YYYY")}>{date.format("MMMM YYYY")}</MenuItem>)
+    });
 }
 
 const Home: React.FC = () => {
@@ -139,7 +139,7 @@ const Home: React.FC = () => {
             </div>
             <div className="monthly-spending-mobile">
                 <Panel header={<MonthlySpendingHeader selectedMonth={selectedMonth} />}>
-                <FormControl size='small' variant='outlined' style={{width: 250, marginTop: 15}}>
+                    <FormControl size='small' variant='outlined' style={{width: 250, marginTop: 15}}>
                         <InputLabel id="month-label">Month</InputLabel>
                         <Select
                             labelId="month-label"
