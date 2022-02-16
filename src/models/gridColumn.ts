@@ -4,10 +4,18 @@ export type GridColumn = {
     className?: string;
     title: string;
     render?: (data: any) => React.ReactNode;
-    filterType?: GridColumnFilterType
+    filterType?: GridColumnFilterType;
+    filterInputType?: GridColumnFilterInputType;
+    filterInputOptions?: string[];
 };
 
 export enum GridColumnFilterType {
     Contains = 'contains',
-    Equals = 'equals'
+    Equals = 'equals',
+    Date = ''
+}
+
+export enum GridColumnFilterInputType {
+    Text = 'text',
+    Dropdown = 'dropdown'
 }

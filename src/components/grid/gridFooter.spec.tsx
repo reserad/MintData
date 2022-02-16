@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { GridModifiers } from "../../models/gridModifiers";
 import { getNewPageNumber, getNewGridModifiers, getPageButtonIndexes, GridFooterProps, GridFooter } from "./gridFooter";
-import { render, RenderResult, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+import { Pagination } from '../../models/pagination';
 
 test('test adjusted page number for page size = 20', () => {
     let newPageNumber = getNewPageNumber(5, 200, 20);
@@ -18,22 +19,57 @@ test('test adjusted page number for page size = 100', () => {
     expect(newPageNumber).toEqual(3)
 });
 
-describe('When the grid has 100 pages', () => {
+describe('Footer page buttons', () => {
+    let pagination: Pagination;
+
+    beforeEach(() => {
+        pagination = {
+            currentPage: 1,
+            lastPage: 5,
+            from: 1,
+            to: 20,
+            perPage: 20,
+            total: 100
+        };
+    });
+
     test('Expect page buttons to start at 1 and end at 10', () => {
-        const expectedPageButtons = [1,2,3,4,5,6,7,8,9,10]
-        let pageButtons = getPageButtonIndexes(1, 100);
+        const expectedPageButtons = [1,2,3,4,5,6,7,8,9,10];
+        pagination.total = 2000;
+        pagination.currentPage = 1;
+        pagination.lastPage = 100;
+
+        let pageButtons = getPageButtonIndexes(pagination);
         expect(pageButtons).toEqual(expectedPageButtons)
     });
 
     test('Expect page buttons to start at 2 and end at 11', () => {
-        const expectedPageButtons = [2,3,4,5,6,7,8,9,10,11]
-        let pageButtons = getPageButtonIndexes(7, 100);
+        const expectedPageButtons = [2,3,4,5,6,7,8,9,10,11];
+        pagination.total = 2000;
+        pagination.currentPage = 7;
+        pagination.lastPage = 100;
+
+        let pageButtons = getPageButtonIndexes(pagination);
         expect(pageButtons).toEqual(expectedPageButtons)
     });
 
     test('Expect page buttons to start at 93 and end at 100', () => {
-        const expectedPageButtons = [93,94,95,96,97,98,99,100]
-        let pageButtons = getPageButtonIndexes(98, 100);
+        const expectedPageButtons = [93,94,95,96,97,98,99,100];
+        pagination.total = 2000;
+        pagination.currentPage = 98;
+        pagination.lastPage = 100;
+
+        let pageButtons = getPageButtonIndexes(pagination);
+        expect(pageButtons).toEqual(expectedPageButtons)
+    });
+
+    test('Expect page buttons to start at 1 and end at 5', () => {
+        const expectedPageButtons = [1,2,3,4,5];
+        pagination.currentPage = 1;
+        pagination.currentPage = 1;
+        pagination.lastPage = 5;
+
+        let pageButtons = getPageButtonIndexes(pagination);
         expect(pageButtons).toEqual(expectedPageButtons)
     });
 });

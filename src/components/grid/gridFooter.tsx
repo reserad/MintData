@@ -11,7 +11,8 @@ type GridFooterProps = {
 }
 
 //Will show max 5 to left and 4 to right of current page.
-export const getPageButtonIndexes = (currentPage: number, lastPage: number) => {
+export const getPageButtonIndexes = (pagination: Pagination) => {
+    const {currentPage, lastPage, total, perPage} = pagination;
     
     let firstHalfConcat: number[] = [];
     let lastHalfConcat: number[] = [];
@@ -35,6 +36,11 @@ export const getPageButtonIndexes = (currentPage: number, lastPage: number) => {
         return firstHalfConcat.concat([currentPage]).concat(lastHalfConcat);
     }
 
+    let numberOfPagesRequired = Math.ceil(total / perPage);
+    if (numberOfPagesRequired < 10) {
+        return Array.from(Array(numberOfPagesRequired).keys()).map(number => number+=1);
+    }
+    
     return [1,2,3,4,5,6,7,8,9,10];
 }
 
@@ -70,9 +76,9 @@ export const getNewGridModifiers = (footerProps: GridFooterProps, paginationActi
 
 const GridFooter = (props: GridFooterProps) => {
     const {pagination, onGridChange, gridModifiers} = props;
-    const {currentPage, lastPage, perPage, from } = pagination;
-    const pageButtonIndexes = getPageButtonIndexes(currentPage, lastPage);
-
+    const {currentPage, lastPage, perPage, from, total } = pagination;
+    const pageButtonIndexes = getPageButtonIndexes(pagination);
+    
     const handlePageSelection = (take: number) => {
         const newPage = getNewPageNumber(currentPage, from, take);
         onGridChange({...gridModifiers, page: newPage, take});

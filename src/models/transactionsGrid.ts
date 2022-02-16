@@ -3,5 +3,6 @@ import { Transaction } from "./transaction";
 
 export type TransactionsGrid = {
     data: Transaction[],
-    pagination: Pagination;
+    categoryTypes: string[],
+    pagination: Pagination
 }

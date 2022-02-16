@@ -1,6 +1,6 @@
-import { TextField } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import React from "react";
-import { GridColumn, GridColumnFilterType } from "../../models/gridColumn";
+import { GridColumn, GridColumnFilterInputType, GridColumnFilterType } from "../../models/gridColumn";
 import { GridFilter, GridModifiers } from "../../models/gridModifiers";
 import {debounce} from 'lodash';
 
@@ -9,6 +9,8 @@ export type GridHeaderProps = {
     gridModifiers: GridModifiers;
     enableSort: boolean;
     filterType?: string;
+    filterInputType?: string;
+    filterInputOptions?: string[];
 } & GridColumn
 
 export const getNewColumFilters = (gridModifiers: GridModifiers, columnName: string, filterType: GridColumnFilterType, value: string): GridFilter[] => {
@@ -40,7 +42,7 @@ export const getNewColumFilters = (gridModifiers: GridModifiers, columnName: str
 }
 
 const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
-    const { width = null, className = null, title, onGridChange, gridModifiers, name, enableSort, filterType } = props;
+    const { width = null, className = null, title, onGridChange, gridModifiers, name, enableSort, filterType, filterInputType = GridColumnFilterInputType.Text, filterInputOptions } = props;
 
     const handleDebouncedFilterChange = debounce((value: string) => {
         handleFilterChange(value);
@@ -48,7 +50,11 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
 
     const handleFilterChange = (value: string) => {
         const newFilters = getNewColumFilters(gridModifiers, name, filterType, value);
-        onGridChange({...gridModifiers, columnFilters: newFilters});
+        let newGridModifiers = Object.assign({}, gridModifiers);
+        if (filterInputType === GridColumnFilterInputType.Dropdown) {
+            newGridModifiers.page = 1;
+        }
+        onGridChange({...newGridModifiers, columnFilters: newFilters});
     }
 
     const handleOnSortClick = () => {
@@ -57,6 +63,8 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
         }
     }
 
+    let coulmnFilter = gridModifiers.columnFilters.find(cf => cf.column === title.toLowerCase());
+
     return (
         <tr 
             className={`${className}`} 
@@ -64,8 +72,26 @@ const GridHeaderColumn: React.FunctionComponent<GridHeaderProps> = (props) => {
         >
             <th>
                 <div style={{height: 45, marginLeft: 5, marginRight: 5}}>
-                    {filterType &&
+                    {filterType && filterInputType === GridColumnFilterInputType.Text &&
                         <TextField inputProps={{ "data-testid": `${name}-filter` }} variant='outlined' label={title} size="small" onChange={(event) => handleDebouncedFilterChange(event.target.value)} fullWidth={true} />
+                    }
+
+                    {filterType && filterInputType === GridColumnFilterInputType.Dropdown && filterInputOptions &&
+                        <FormControl size='small' variant='outlined' fullWidth={true}>
+                            <InputLabel id={`${title}-select-label`}>{title}</InputLabel>
+                            <Select
+                                labelId={`${title}-select-label`}
+                                id={`${title}-select`}
+                                label={title}
+                                fullWidth={true}
+                                size="small"
+                                value={coulmnFilter? coulmnFilter.value : ''}
+                                onChange={(event) => handleDebouncedFilterChange(event.target.value)}
+                            >
+                                <MenuItem key="all" value={''}>All</MenuItem>
+                                {filterInputOptions.map((option, i) => <MenuItem key={option} value={option}>{option}</MenuItem>)}
+                            </Select>
+                        </FormControl>
                     }
                 </div>
                 <div data-testid={`${name}-sort`} className={`${enableSort && 'sortable'} ${gridModifiers.sortBy === name ? 'sorted' : ''}`}  onClick={handleOnSortClick}>{title}</div>

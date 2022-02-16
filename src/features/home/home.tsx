@@ -12,7 +12,7 @@ import Grid from '../../components/grid/grid';
 import {Column} from '../../components/grid/gridHeaderColumn';
 import CurrencyFormatter from '../../helpers/currencyFormatter';
 import { GridModifiers } from '../../models/gridModifiers';
-import { GridColumnFilterType } from '../../models/gridColumn';
+import { GridColumnFilterInputType, GridColumnFilterType } from '../../models/gridColumn';
 
 export type MonthlySpendingHeaderProps = {
     selectedMonth: string;
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
     const dispatch = useDispatch();
     const { isGettingTransactions, transactionsError } = useSelector(homeSelector) as HomePayload;
     const [gridModifiers, setGridModifiers] = useState<GridModifiers>({page: 1, take: 20, sortBy: null, direction: 'desc', columnFilters: []});
-    const [grid, setGrid] = useState<TransactionsGrid>({data: [], pagination: null});
+    const [grid, setGrid] = useState<TransactionsGrid>({data: [], pagination: null, categoryTypes:[]});
     const [monthlySpending, setMonthlySpending] = useState<Transaction[]>([]);
     const [isLoadingGrid, setIsLoadingGrid] = useState(true);
     const [gridError, setGridError] = useState(null);
@@ -106,6 +106,8 @@ const Home: React.FC = () => {
                             name="category"
                             className="category" 
                             title="Category"
+                            filterInputType={GridColumnFilterInputType.Dropdown}
+                            filterInputOptions={grid.categoryTypes}
                             filterType={GridColumnFilterType.Contains}
                         />
                         <Column
